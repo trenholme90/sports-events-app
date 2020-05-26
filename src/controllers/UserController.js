@@ -2,7 +2,7 @@ const User = require('../models/User');
 const bcrypt= require('bcrypt');
 
 module.exports = {
-    async store(req, res) {
+    async createUser(req, res) {
         try {
             console.log(req.body);
             const {firstName, lastName, password, email} = req.body;
@@ -30,6 +30,20 @@ module.exports = {
 
         } catch (error) {
             throw Error(`Error while registering new user: ${error}`)
+        }
+    },
+
+    async getUserByID(req, res) {
+        const { userId } = req.params;
+        console.log(userId)
+
+        try {
+            const user = await User.findById(userId);
+            return res.json(user)
+        } catch (error) {
+            res.status(400).json({
+                message: 'User ID does not exist. Register here!'
+            })
         }
     }
 }

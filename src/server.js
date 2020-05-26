@@ -1,9 +1,8 @@
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const RegisterController = require('./controllers/RegisterController');
-
+const routes = require('./routes');
+const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Only use env variables if not production
@@ -16,12 +15,6 @@ app.use(cors());
 // No need for body-parser
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello from express');
-});
-
-app.post('/register', RegisterController.store);
-
 try {
     mongoose.connect(process.env.MONGO_DB_CONNECTION, {
         useNewUrlParser: true,
@@ -31,6 +24,8 @@ try {
 } catch (error) {
     console.log(error)
 }
+
+app.use(routes);
 
 app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
